@@ -7,7 +7,7 @@ other source
 *
 * Name: Samarth Modi Student ID: 133357202 Date: 08-10-2022
 *
-* Your app’s URL (from Cyclic) : ______________________________________________
+* Your app’s URL (from Cyclic) : https://joyous-tuxedo-bee.cyclic.app/
 *
 *************************************************************************/
  //http:localhost:8080

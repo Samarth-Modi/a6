@@ -1,13 +1,11 @@
  /*************************************************************************
 * BTI325– Assignment 2
-* I declare that this assignment is my own work in accordance with Seneca Academic
-Policy. No part * of this assignment has been copied manually or electronically from any
-other source
+* I took help from my friend ujjwal for data-service module, however I did not copy from him.
 * (including 3rd party web sites) or distributed to other students.
 *
 * Name: Samarth Modi Student ID: 133357202 Date: 08-10-2022
 *
-* Your app’s URL (from Cyclic) : ______________________________________________
+* Your app’s URL (from Cyclic) : https://joyous-tuxedo-bee.cyclic.app/
 *
 *************************************************************************/
 const fs = require('fs');

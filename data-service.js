@@ -9,6 +9,7 @@
 *
 *************************************************************************/
 const fs = require('fs');
+const { resolve } = require('path');
 let employees = [];
 let departments = [];
 
@@ -80,5 +81,113 @@ module.exports.getDepartments = function()
         res(departments);
     });
 };
+/* 
+: Adding "addEmployee" function within data-service.js */
+module.exports.addEmployee = function(employeeData)
+{
+    return new Promise((res,rej) => 
+    {
+        if(employeeData.isManager == undefined)
+        {
+            employeeData.isManager = false;
+        }
+        else
+        {
+            employeeData.isManager = true;
+        }
 
+        employeeData.employeeNum = employees.length+1;
+        employees.push(employeeData);
+
+        res(employees);
+    });
+}
+
+/* getEmployeesByStatus(status) */
+module.exports.getEmployeesByStatus = function(status)
+{
+    return new Promise((res,rej) => 
+    {
+        var empObj = [];
+
+        for(var i = 0; i < employees.length; i++)
+        {
+            if(employees[i].status == status)
+            {
+                empObj.push(employees[i]);
+            }
+        }
+
+        if(employees.length = 0)
+        {
+            rej("no results returned");
+        }
+        res(empObj);
+    });
+}
+
+module.exports.getEmployeesByDepartment = function(department)
+{
+    return new Promise((res,rej)=>
+    {
+        var empobj = [];
+        
+        for(var i =0; i < employees.length; i++)
+        {
+            if(employees[i].department == department)
+            {
+                empobj.push(employees[i]);
+            }
+        }
+
+        if(employees.length == 0)
+        {
+            rej("no results returned");
+        }
+        res(empobj);
+    });
+}
+
+module.exports.getEmployeesByManager = function(manager)
+{
+    return new Promise((res,rej) =>
+    {
+        var Empobj = [];
+        for(var i = 0; i < employees.length; i++)
+        {
+            if(employees[i].employeeManagerNum == manager)
+            {
+                Empobj.push(employees[i]);
+            }
+        }
+
+        if(employees.length == 0)
+        {
+            rej("no results returned");
+        }
+        res(Empobj);
+    });
+}
+
+module.exports.getEmployeeByNum = function(num)
+{
+    return new Promise((res,rej)=>
+    {
+        var EMPobj = [];
+
+        for( var i = 0; i < employees.length; i++)
+        {
+            if(employees[i].employeeNum == num)
+            {
+                EMPobj.push(employees[i]);
+            }
+        }
+
+        if(employees.length == 0)
+        {
+            rej("no results returned");
+        }
+        res(EMPobj);
+    });
+}
 

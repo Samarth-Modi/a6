@@ -33,18 +33,21 @@ function onHttpStart(){
     console.log("Express http server listening on: " + HTTP_PORT);
 }
 
-app.use(bodyParser.urlencoded({extended: true}));
+//part 3
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+/* app.use(bodyParser.urlencoded({extended: true})); */
 
 /* Define a "storage" variable using "multer.diskStorage" */ 
 var storage =  multer.diskStorage({
     destination: "./public/images/uploaded",
-    filename: function(req,res,cb){
-        cb(null, Date.now() + path.extreme(file.originalname));
+    filename: function(req,file,cb){
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 })
 
-//Define an "upload" variable as multer({ storage: storage });
- const upload = multer({storage: storage});
+
 
 app.get("/",function(req,res)
 {
@@ -56,13 +59,85 @@ app.get("/about", function(req,res)
     res.sendFile(path.join(__dirname,"/views/about.html"));
 })
 
+app.get('/employees/add',function(req,res)
+{
+    res.sendFile(path.join(__dirname,"/views/addEmployee.html"))
+})
+
+app.get('/images/add',function(req,res)
+{
+    res.sendFile(path.join(__dirname,"/views/addImage.html"))
+})
+
+//Define an "upload" variable as multer({ storage: storage });
+const upload = multer({storage: storage});
+
+/* Adding the "Post" route */
+app.post("/images/add", upload.single("imageFile"),function(req,res) 
+{
+    res.redirect("/images");
+});
+
+app.post("/employees/add", function(req,res)
+{
+    dataService.addEmployee(req.body).then((data) => 
+    {
+        res.redirect("/employees");
+    })
+})
+
+
+
+
+/*Adding "Get" route /images using the "fs" module  */
+app.get("/images",function(req,res) 
+{
+    fs.readdir("./public/images/uploaded", function(err,items)
+    {
+        for(var a = 0; a < items.length; a++)
+        {
+            items[a];
+        }
+        return res.json({images: items});
+    })
+})
+
+/* Part 4: Adding New Routes to query "Employees" */
 app.get("/employees", function(req,res)
 {
-  dataService.getAllEmployees().then((data) => 
-  {
-    res.json(data);
-  })
-})
+// route to getEmployeesByDepartment(department)
+if(req.query.department){  //if the query string is for department
+    dataService.getEmployeesByDepartment(req.query.department).then((data) => {
+      res.json(data);
+    });   
+} else if(req.query.manager){ //if the query string is for manager
+    dataService.getEmployeesByManager(req.query.manager).then((data) => {
+          res.json(data);
+     });
+} else if(req.query.status){   //if the query string is for status
+    dataService.getEmployeesByStatus(req.query.status).then((data) => {
+      res.json(data);
+    });
+} else if(req.query.employeeNum){   //if the query string is for employeeNum
+    dataService.getEmployeeByNum(req.query.employeeNum).then((data) => {
+         res.json(data);
+    });
+} else{ 
+    dataService.getAllEmployees().then((data) => {
+          res.json(data);
+    });
+}
+  });
+
+
+/*   Add the "/employee/value" route */
+app.get("/employee/:employeeNum",function(req,res)
+{
+    dataService.getEmployeeByNum(req.params.employeeNum).then((data)=>
+    {
+        res.json(data);
+    });
+});
 
 app.get("/managers",function(req,res)
 {
@@ -80,40 +155,13 @@ app.get('/departments', function(req,res)
     });
 });
 
-app.get('/employees/add',function(req,res)
-{
-    res.sendFile(path.join(__dirname,"/views/addEmployee.html"))
-})
 
-app.get('/images/add',function(req,res)
-{
-    res.sendFile(path.join(__dirname,"/views/addImage.html"))
-})
+
 
 app.use(function(req,res) 
 {
     res.status(404).send('Page Not Found');
 });
-
-/* Adding the "Post" route */
-app.post("images/add", upload.single("imageFile"),(req,res) => 
-{
-    res.redirect("/images");
-});
-
-/*Adding "Get" route /images using the "fs" module  */
-app.get("/images",function(req,res) 
-{
-    fs.readdir("./public/images/uploaded", function(err,items)
-    {
-        for(var a = 0; a < items.length; ++i)
-        {
-            items[i];
-        }
-        return res.json({images: items});
-    })
-})
-
 
 //app.listen(HTTP_PORT, onHttpStart);
 

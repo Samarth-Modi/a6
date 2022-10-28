@@ -1,8 +1,7 @@
 /*************************************************************************
 * BTI325– Assignment 3
-* I declare that this assignment is my own work in accordance with Seneca Academic Policy.
-No part of this assignment has been copied manually or electronically from any other source.
-* (including 3rd party web sites) or distributed to other students.
+* for this assignment, I took the help of my Friend kush while doing the part-4 from the instruction as I got confused.
+other than that I did everything by myself.
 *
 * Name: Samarth Modi Student ID: 133357202 Date: 28-10-2022
 *

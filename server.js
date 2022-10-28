@@ -1,15 +1,16 @@
- /*************************************************************************
+/*************************************************************************
 * BTI325– Assignment 3
-* I declare that this assignment is my own work in accordance with Seneca Academic
-Policy. No part * of this assignment has been copied manually or electronically from any
-other source
+* I declare that this assignment is my own work in accordance with Seneca Academic Policy.
+No part of this assignment has been copied manually or electronically from any other source.
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: Samarth Modi Student ID: 133357202 Date: 08-10-2022
+* Name: Samarth Modi Student ID: 133357202 Date: 28-10-2022
 *
-* Your app’s URL (from Cyclic) : https://joyous-tuxedo-bee.cyclic.app/
+* Your app’s URL (from Cyclic Heroku) that I can click to see your application:
+* https://whispering-depths-02754.herokuapp.com/
 *
-*************************************************************************/
+*************************************************************************/ 
+
  //http:localhost:8080
 var express = require("express"); // Include express.js module
 var app = express();

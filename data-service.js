@@ -1,6 +1,6 @@
 /*************************************************************************
 * BTI325– Assignment 3
-* for this assignment, I took the help of my Friend kush while doing the part-4 from the instruction as I got confused.
+* for this assignment, I took the help of my Friend kush while assignment.
 other than that I did everything by myself.
 *
 * Name: Samarth Modi Student ID: 133357202 Date: 28-10-2022

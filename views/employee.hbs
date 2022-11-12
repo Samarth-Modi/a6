@@ -1,0 +1,320 @@
+{{#employee}}
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{firstName}} {{lastName}} - Employee: {{employeeNum}}</h2>
+        <hr />
+        <form method="post" action="/employee/update">
+            <fieldset>
+                <legend>Personal Information</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input class="form-control" 
+                                id="firstName"
+                                name="firstName" 
+                                type="text"
+                                value="{{firstName}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input class="form-control" id="lastName" name="lastName" type="text"
+                                value="{{lastName}}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input
+                             class="form-control"
+                            id="email"
+                            name="email"
+                            type="text"
+                            value="{{email}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="SSN">Social Security Number:</label>
+                            <input 
+                            class="form-control"
+                            id="SSN"
+                            name="SSN"
+                            type="text"
+                            value="{{SSN}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="addressStreet">Address (Street):</label>
+                            <input 
+                            class="form-control"
+                            id="addressStreet"
+                            name="addressStreet"
+                            type="text"
+                            value="{{addressStreet}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="addressCity">Address (City):</label>
+                            <input 
+                            class="form-control"
+                            id="addressCity"
+                            name="addressCity"
+                            type="text"
+                            value="{{addressCity}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="addressState">Address (State):</label>
+                            <input 
+                            class="form-control"
+                            id="addressState"
+                            name="addressState"
+                            type="text"
+                            value="{{addressState}}" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="addressPostal">Address (Zip Code):</label>
+                            <input 
+                            class="form-control"
+                            id="addressPostal"
+                            name="addressPostal"
+                            type="text"
+                            value="{{addressPostal}}" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Company Information</legend>
+                <div class="row">
+                    <div class="col-mid-3">
+                        <div class="form-group">
+                            <label for="isManager"> Manager:</label>
+                            {{#if isManager}}
+
+                            <input
+                                class="form-control"
+                                id="isManager"
+                                name="isManager"
+                                type="checkbox"
+                                checked 
+                                />
+                            {{else}}
+                            <input
+                                class="form-control"
+                                id="isManager"
+                                name="isManager"
+                                type="checkbox"
+                            />
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="employeeManagerNum">
+                                Employee's Manager Number:
+                            </label>
+                            <input
+                                class="for-control"
+                                id="employeeManagerNum"
+                                name="employeeManagerNum"
+                                type="text"
+                                value="{{employeeManagerNum}}"
+                                />
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Status:</label><br />
+                            {{#equal status "Full Time"}}
+                            <input 
+                                class="checkbox-inline"
+                                id="fulltime"
+                                name="status"
+                                type="radio"
+                                value="Full Time"
+                                checked
+                                />
+                                <label for="fullTime"> Full Time </label> &nbsp;
+                            <input
+                                class="checkbox-inline"
+                                id="partTime"
+                                name="status"
+                                type="radio"
+                                value="Part Time"
+                                />
+                                <label for="part-time">Part Time</label>
+
+                                {{else}}
+                                <input
+                                    class="checkbox-inline"
+                                    id="fullTime"
+                                    name="status"
+                                    type="radio"
+                                    value="Full Time"
+                                    />
+                                <label for="fullTime"> Full Time </label> &nbsp;
+                            <input
+                                class="checkbox-inline"
+                                id="partTime"
+                                name="status"
+                                type="radio"
+                                value="Part Time"
+                                checked
+                            />
+                            <label for="partTime"> Part Time </label>
+                            {{/equal}}
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="department"> Department: </label>
+
+                            {{#equal department "1" }}
+                            <select
+                                class="form-control"
+                                name="department"
+                                id="department"
+                            >
+                                <option value="1" selected>
+                                    Creative Services
+                                </option>
+                                <option value="2">Product Development</option>
+                                <option value="3">Marketing</option>
+                                <option value="4">Strategic Planning</option>
+                                <option value="5">Accounting</option>
+                                <option value="6">Human resources</option>
+                                <option value="7">Quality Analysis</option>
+                            </select>
+
+                            {{/equal}} {{#equal department "2" }}
+                            <select
+                                class="form-control"
+                                name="department"
+                                id="department"
+                            >
+                                <option value="1">Creative Services</option>
+                                <option value="2" selected>
+                                    Product Development
+                                </option>
+                                <option value="3">Marketing</option>
+                                <option value="4">Strategic Planning</option>
+                                <option value="5">Accounting</option>
+                                <option value="6">Human resources</option>
+                                <option value="7">Quality Analysis</option>
+                            </select>
+                            {{/equal}} {{#equal department "3" }}
+                            <select
+                                class="form-control"
+                                name="department"
+                                id="department"
+                            >
+                                <option value="1">Creative Services</option>
+                                <option value="2">Product Development</option>
+                                <option value="3" selected>Marketing</option>
+                                <option value="4">Strategic Planning</option>
+                                <option value="5">Accounting</option>
+                                <option value="6">Human resources</option>
+                                <option value="7">Quality Analysis</option>
+                            </select>
+                            {{/equal}} {{#equal department "4" }}
+                            <select
+                                class="form-control"
+                                name="department"
+                                id="department"
+                            >
+                                <option value="1">Creative Services</option>
+                                <option value="2">Product Development</option>
+                                <option value="3">Marketing</option>
+                                <option value="4" selected>
+                                    Strategic Planning
+                                </option>
+                                <option value="5">Accounting</option>
+                                <option value="6">Human resources</option>
+                                <option value="7">Quality Analysis</option>
+                            </select>
+                            {{/equal}} {{#equal department "5" }}
+                            <select
+                                class="form-control"
+                                name="department"
+                                id="department"
+                            >
+                                <option value="1">Creative Services</option>
+                                <option value="2">Product Development</option>
+                                <option value="3">Marketing</option>
+                                <option value="4">Strategic Planning</option>
+                                <option value="5" selected>Accounting</option>
+                                <option value="6">Human resources</option>
+                                <option value="7">Quality Analysis</option>
+                            </select>
+                            {{/equal}} {{#equal department "6" }}
+                            <select
+                                class="form-control"
+                                name="department"
+                                id="department"
+                            >
+                                <option value="1">Creative Services</option>
+                                <option value="2">Product Development</option>
+                                <option value="3">Marketing</option>
+                                <option value="4">Strategic Planning</option>
+                                <option value="5">Accounting</option>
+                                <option value="6" selected>
+                                    Human resources
+                                </option>
+                                <option value="7">Quality Analysis</option>
+                            </select>
+                            {{/equal}} {{#equal department "7" }}
+                            <select
+                                class="form-control"
+                                name="department"
+                                id="department"
+                            >
+                                <option value="1">Creative Services</option>
+                                <option value="2">Product Development</option>
+                                <option value="3">Marketing</option>
+                                <option value="4">Strategic Planning</option>
+                                <option value="5">Accounting</option>
+                                <option value="6">Human resources</option>
+                                <option value="7" selected>
+                                    Quality Analysis
+                                </option>
+                            </select>
+                            {{/equal}}
+                        </div>
+                    </div>
+
+                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label> Hire Date: </label>
+                                <input
+                                    class="form-control"
+                                    id="hireDate"
+                                    name="hireDate"
+                                    type="text"
+                                    value="{{hireDate}}"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <hr />
+            <input type="submit" class="btn btn-primary pull-right" value="Update Employee" /><br /><br /><br />
+        </form>
+    </div>
+</div>
+{{/employee}}

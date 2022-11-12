@@ -1,12 +1,11 @@
 /*************************************************************************
-* BTI325– Assignment 3
-* for this assignment, I took the help of my Friend kush while doing the part-4 from the instruction as I got confused.
-other than that I did everything by myself.
+* BTI325– Assignment 4
+* for this assignment, I took the help of my Friend kush while doing assignment
 *
 * Name: Samarth Modi Student ID: 133357202 Date: 28-10-2022
 *
 * Your app’s URL (from Cyclic Heroku) that I can click to see your application:
-* https://whispering-depths-02754.herokuapp.com/
+* 
 *
 *************************************************************************/ 
 
@@ -21,6 +20,8 @@ var path = require("path"); // include moduel path to use __dirname, and functio
 const multer = require("multer");
 
 const fs = require('fs');
+
+var exphbs = require('express-handlebars');
 
 app.use(express.static('public'));
 
@@ -37,6 +38,32 @@ function onHttpStart(){
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+//P1S1 (part-1 Step1)
+app.engine('.hbs',exphbs.engine({extname:'.hbs', defaultLayout: "main",
+helpers:
+{
+    navLink: function(url, options)
+    {
+        return '<li' + ((url == app.locals.activeRoute) ? ' class="active"' : '')+'><a href=" ' +
+        url + ' ">' + options.fn(this) + '</a></li>';
+    }, equal: function (lvalue,rvalue,options) 
+    {
+        if(arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+        if(lvalue != rvalue)
+        {
+            return options.inverse(this);
+        } else 
+        {
+            return options.fn(this);
+        }
+    }
+    }
+}
+));
+
+app.set('view engine','.hbs');
+
 /* app.use(bodyParser.urlencoded({extended: true})); */
 
 /* Define a "storage" variable using "multer.diskStorage" */ 
@@ -47,26 +74,33 @@ var storage =  multer.diskStorage({
     }
 })
 
+//FIXING THE NAVIGATION BAR
+app.use(function(req,res,next)
+{
+    let route = req.baseUrl+req.path;
+    app.locals.activeRoute = (route == "/" ?"/" :route.replace(/\/$/,""));
+    next();
+});
 
-
+//ROUTES
 app.get("/",function(req,res)
 {
-    res.sendFile(path.join(__dirname,"/views/home.html"));
+    res.render('home');
 })
 
 app.get("/about", function(req,res)
 {
-    res.sendFile(path.join(__dirname,"/views/about.html"));
+    res.render('about');
 })
 
 app.get('/employees/add',function(req,res)
 {
-    res.sendFile(path.join(__dirname,"/views/addEmployee.html"))
+    res.render('addEmployee');
 })
 
 app.get('/images/add',function(req,res)
 {
-    res.sendFile(path.join(__dirname,"/views/addImage.html"))
+    res.render('addImage');
 })
 
 //Define an "upload" variable as multer({ storage: storage });
@@ -86,6 +120,12 @@ app.post("/employees/add", function(req,res)
     })
 })
 
+app.post("/employee/update", (req, res) => {
+    dataService.updateEmployee(req.body).then((data) =>{
+        res.redirect("/employees");
+    }).catch(err => res.render({message: "no results"}));
+   });
+
 
 
 
@@ -98,9 +138,9 @@ app.get("/images",function(req,res)
         {
             items[a];
         }
-        return res.json({images: items});
+        return res.render("images",{images: items});
     })
-})
+});
 
 /* Part 4: Adding New Routes to query "Employees" */
 app.get("/employees", function(req,res)
@@ -108,24 +148,28 @@ app.get("/employees", function(req,res)
 // route to getEmployeesByDepartment(department)
 if(req.query.department){  //if the query string is for department
     dataService.getEmployeesByDepartment(req.query.department).then((data) => {
-      res.json(data);
-    });   
+      res.render("employees",{employees: data})
+    }).catch(err => res.render({message: "no results"}));
+
 } else if(req.query.manager){ //if the query string is for manager
     dataService.getEmployeesByManager(req.query.manager).then((data) => {
-          res.json(data);
-     });
-} else if(req.query.status){   //if the query string is for status
+        res.render("employees",{employees: data})
+     }).catch(err => res.render({message: "no results"}));
+
+    } else if(req.query.status){   //if the query string is for status
     dataService.getEmployeesByStatus(req.query.status).then((data) => {
-      res.json(data);
-    });
+        res.render("employees",{employees: data})
+    }).catch(err => res.render({message: "no results"}));
+
 } else if(req.query.employeeNum){   //if the query string is for employeeNum
     dataService.getEmployeeByNum(req.query.employeeNum).then((data) => {
-         res.json(data);
-    });
+        res.render("employees",{employees: data})
+    }).catch(err => res.render({message: "no results"}));
+
 } else{ 
     dataService.getAllEmployees().then((data) => {
-          res.json(data);
-    });
+        res.render("employees",{employees: data})
+    }).catch(err => res.render({message: "no results"}));
 }
   });
 
@@ -135,8 +179,8 @@ app.get("/employee/:employeeNum",function(req,res)
 {
     dataService.getEmployeeByNum(req.params.employeeNum).then((data)=>
     {
-        res.json(data);
-    });
+        res.render("employee",{employee: data});
+    }).catch(err => res.render({message: "no result"}));
 });
 
 app.get("/managers",function(req,res)
@@ -151,8 +195,8 @@ app.get('/departments', function(req,res)
 {
     dataService.getDepartments().then((data) => 
     {
-        res.json(data);
-    });
+        res.render("departments",{departments: data});
+    }).catch(err => res.render({message: "no results"}));
 });
 
 

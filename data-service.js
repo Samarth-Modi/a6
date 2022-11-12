@@ -192,3 +192,28 @@ module.exports.getEmployeeByNum = function(num)
     });
 }
 
+module.exports.updateEmployee = function(employeeData)
+{
+return new Promise((res,rej) =>
+{
+    let x = false;
+    for(let i = 0; i < Emp.length;i++)
+    {
+        if(Emp[i].SSN == employeeData.SSN)
+        {
+            Emp[i] = employeeData;
+            Emp[i] = employeeNum = i +1;
+            x= true;
+        }
+    }
+
+    if(x == false)
+    {
+        rej("Data Not found");
+    }else
+    {
+        res();
+    }
+});
+}
+

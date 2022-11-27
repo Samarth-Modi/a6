@@ -19,6 +19,8 @@ var path = require("path"); // include moduel path to use __dirname, and functio
 
 const multer = require("multer");
 
+var bodyParser = require('body-parser');
+
 const fs = require('fs');
 
 var exphbs = require('express-handlebars');
@@ -34,33 +36,35 @@ function onHttpStart(){
     console.log("Express http server listening on: " + HTTP_PORT);
 }
 
-//part 3
+//part 3 to handle form data
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 //P1S1 (part-1 Step1)
-app.engine('.hbs',exphbs.engine({extname:'.hbs', defaultLayout: "main",
-helpers:
-{
-    navLink: function(url, options)
-    {
-        return '<li' + ((url == app.locals.activeRoute) ? ' class="active"' : '')+'><a href=" ' +
-        url + ' ">' + options.fn(this) + '</a></li>';
-    }, equal: function (lvalue,rvalue,options) 
-    {
-        if(arguments.length < 3)
-        throw new Error("Handlebars Helper equal needs 2 parameters");
-        if(lvalue != rvalue)
-        {
-            return options.inverse(this);
-        } else 
-        {
-            return options.fn(this);
-        }
-    }
-    }
+app.engine('.hbs', exphbs.engine({ extname: '.hbs', defaultLayout: "main",
+runtimeOptions: {
+  
+    allowProtoPropertiesByDefault: true,
+  
+    allowProtoMethodsByDefault: true,
+  
+},
+helpers:{
+  navLink: function(url, options){ 
+  return '<li' +  
+      ((url == app.locals.activeRoute) ? ' class="active" ' : '') +  
+      '><a href=" ' + url + ' ">' + options.fn(this) + '</a></li>'; 
+}, equal: function (lvalue, rvalue, options) { 
+  if (arguments.length < 3) 
+      throw new Error("Handlebars Helper equal needs 2 parameters"); 
+  if (lvalue != rvalue) { 
+      return options.inverse(this); 
+  } else { 
+      return options.fn(this); 
+  } 
 }
-));
+}
+}));
 
 app.set('view engine','.hbs');
 
@@ -73,6 +77,8 @@ var storage =  multer.diskStorage({
         cb(null, Date.now() + path.extname(file.originalname));
     }
 })
+
+app.use(express.static('public'));
 
 //FIXING THE NAVIGATION BAR
 app.use(function(req,res,next)
@@ -95,7 +101,12 @@ app.get("/about", function(req,res)
 
 app.get('/employees/add',function(req,res)
 {
-    res.render('addEmployee');
+    dataService.getDepartments().then((data)=>{
+        res.render("addEmployee", {departments:data});
+    }).catch((err)=>{
+        res.render("addEmployee",{departments:[]});
+    });
+  
 })
 
 app.get('/images/add',function(req,res)
@@ -114,14 +125,14 @@ app.post("/images/add", upload.single("imageFile"),function(req,res)
 
 app.post("/employees/add", function(req,res)
 {
-    dataService.addEmployee(req.body).then((data) => 
+    dataService.addEmployee(req.body).then((dataService) => 
     {
         res.redirect("/employees");
     })
 })
 
 app.post("/employee/update", (req, res) => {
-    dataService.updateEmployee(req.body).then((data) =>{
+    dataService.updateEmployee(req.body).then((dataService) =>{
         res.redirect("/employees");
     }).catch(err => res.render({message: "no results"}));
    });
@@ -147,59 +158,127 @@ app.get("/employees", function(req,res)
 {
 // route to getEmployeesByDepartment(department)
 if(req.query.department){  //if the query string is for department
-    dataService.getEmployeesByDepartment(req.query.department).then((data) => {
-      res.render("employees",{employees: data})
+    dataService.getEmployeesByDepartment(req.query.department).then((dataService) => {
+      res.render("employees",dataService.length>0?{employees:dataService}:{message:"No results"});
+
     }).catch(err => res.render({message: "no results"}));
 
 } else if(req.query.manager){ //if the query string is for manager
-    dataService.getEmployeesByManager(req.query.manager).then((data) => {
-        res.render("employees",{employees: data})
+    dataService.getEmployeesByManager(req.query.manager).then((dataService) => {
+        res.render("employees",dataService.length>0?{employees:dataService}:{message:"No results"});
+
      }).catch(err => res.render({message: "no results"}));
 
     } else if(req.query.status){   //if the query string is for status
-    dataService.getEmployeesByStatus(req.query.status).then((data) => {
-        res.render("employees",{employees: data})
+    dataService.getEmployeesByStatus(req.query.status).then((dataService) => {
+        res.render("employees",dataService.length>0?{employees:dataService}:{message:"No results"});
     }).catch(err => res.render({message: "no results"}));
 
 } else if(req.query.employeeNum){   //if the query string is for employeeNum
-    dataService.getEmployeeByNum(req.query.employeeNum).then((data) => {
-        res.render("employees",{employees: data})
+    dataService.getEmployeeByNum(req.query.employeeNum).then((dataService) => {
+        res.render("employees",dataService.length>0?{employees:dataService}:{message:"No results"});
     }).catch(err => res.render({message: "no results"}));
 
 } else{ 
-    dataService.getAllEmployees().then((data) => {
-        res.render("employees",{employees: data})
+    dataService.getAllEmployees().then((dataService) => {
+        res.render("employees",dataService.length>0?{employees:dataService}:{message:"No results"});
     }).catch(err => res.render({message: "no results"}));
 }
   });
 
 
 /*   Add the "/employee/value" route */
-app.get("/employee/:employeeNum",function(req,res)
+/* app.get("/employee/:employeeNum",function(req,res)
 {
     dataService.getEmployeeByNum(req.params.employeeNum).then((data)=>
     {
         res.render("employee",{employee: data});
     }).catch(err => res.render({message: "no result"}));
+}); */
+
+app.get("/employee/:empNum", (req, res) => {
+    // initialize an empty object to store the values
+    let viewData = {};
+    dataService.getEmployeeByNum(req.params.empNum).then((data) => {
+    if (data) {
+    viewData.employee = data; //store employee data in the "viewData" object as "employee"
+    } else {
+    viewData.employee = null; // set employee to null if none were returned
+    }
+    }).catch(() => {
+    viewData.employee = null; // set employee to null if there was an error
+    }).then(dataService.getDepartments)
+    .then((data) => {
+    viewData.departments = data; // store department data in the "viewData" object as
+    "departments"
+    // loop through viewData.departments and once we have found the departmentId that matches
+    // the employee's "department" value, add a "selected" property to the matching
+    // viewData.departments object
+    13
+    for (let i = 0; i < viewData.departments.length; i++) {
+    if (viewData.departments[i].departmentId == viewData.employee.department) {
+    viewData.departments[i].selected = true;
+    }
+    }
+    }).catch(() => {
+    viewData.departments = []; // set departments to empty if there was an error
+    }).then(() => {
+    if (viewData.employee == null) { // if no employee - return an error
+    res.status(404).send("Employee Not Found");
+    } else {
+    res.render("employee", { viewData: viewData }); // render the "employee" view
+    }
+    });
+    });
+  
+app.get("/employees/delete/:empNum",(req,res)=>{
+    dataService.deleteEmployeeByNum(req.params.empNum).then(()=>{
+       redirect("/employees");
+    }).catch((err)=>{
+        res.status(400).send("Unable to Remove Employee / Employee not found")
+    });
 });
+    
 
 app.get("/managers",function(req,res)
 {
-    dataService.getManagers().then((data) => 
+    dataService.getManagers().then((dataService) => 
     {
-        res.json(data);
+        res.render("departments",dataService.length>0?{departments:dataService}:{message:"No results."})
+
     })
 })
 
 app.get('/departments', function(req,res) 
 {
-    dataService.getDepartments().then((data) => 
+    dataService.getDepartments().then((dataService) => 
     {
-        res.render("departments",{departments: data});
+        res.render("departments",{departments: dataService});
     }).catch(err => res.render({message: "no results"}));
 });
 
+app.get("/departments/add",(req,res)=>
+{
+    dataService.addDepartment(req.body).then(()=>
+    {
+        res.redirect("/departments");
+    }).catch((err)=>
+    {
+        res.status(500).send("Unable to update the department.");
+    })
+})
 
+app.get("/department/:departmentId",(req,res)=>{
+    dataService.getDepartmentById(req.params.departmentId).then((data)=>{
+        if (!data)
+            {res.status(404).send("Department not found");}
+        else
+            {res.render("department",{department:data});}
+    }).catch((err)=>{
+        res.status(404).send("Department not found.");
+    })
+  });
+  
 
 
 app.use(function(req,res) 

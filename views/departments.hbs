@@ -1,6 +1,9 @@
 <div class="row">
  <div class="col-md-12">
- <h2>Departments</h2>
+ <h2>Departments
+    <a href="/departments/add" class="btn btn-success pull-right">Add New
+Department</a>
+ </h2>
  <hr>
  
     <div class="table-responsive">
@@ -15,12 +18,16 @@
                 {{#each departments}}
                 <tr>
                     <td>
-                        <a href="/employees?department={{this.departmentId}}">{{this.departmentId}}</a>
+                        <a href="/department/{{this.departmentId}}">{{this.departmentId}}</a>
                     </td>
                     <td>
-                        <a href="/employees?department={{this.departmentId}}">{{this.departmentName}}</a>
+                        <a href="/department={{this.departmentId}}">{{this.departmentName}}</a>
                     </td>
                 </tr>
+                {{else}}
+                <div class="col-md-12 text center">
+                    <strong>{{message}}</strong>
+                </div>
                 {{/each}}
             </tbody>
         </table>

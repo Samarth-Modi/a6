@@ -1,12 +1,12 @@
 /*************************************************************************
-* BTI325– Assignment 4
-* for this assignment, I took the help of my Friend kush while doing assignment
+* BTI325– Assignment 5
+* for this assignment, I took the help of my Friend kush while doing the assignment.
 *
-* Name: Samarth Modi Student ID: 133357202 Date: 12-11-2022
+* Name: Samarth Modi Student ID: 133357202 Date: 27-11-2022
 *
 * Your app’s URL (from Cyclic Heroku) that I can click to see your application:
-* https://whispering-depths-02754.herokuapp.com/
-*
+* 
+*https://github.com/Samarth-Modi/a5.git
 *************************************************************************/ 
 
  //http:localhost:8080
@@ -125,14 +125,14 @@ app.post("/images/add", upload.single("imageFile"),function(req,res)
 
 app.post("/employees/add", function(req,res)
 {
-    dataService.addEmployee(req.body).then((dataService) => 
+    dataService.addEmployee(req.body).then(() => 
     {
         res.redirect("/employees");
     })
 })
 
 app.post("/employee/update", (req, res) => {
-    dataService.updateEmployee(req.body).then((dataService) =>{
+    dataService.updateEmployee(req.body).then(() =>{
         res.redirect("/employees");
     }).catch(err => res.render({message: "no results"}));
    });
@@ -214,7 +214,6 @@ app.get("/employee/:empNum", (req, res) => {
     // loop through viewData.departments and once we have found the departmentId that matches
     // the employee's "department" value, add a "selected" property to the matching
     // viewData.departments object
-    13
     for (let i = 0; i < viewData.departments.length; i++) {
     if (viewData.departments[i].departmentId == viewData.employee.department) {
     viewData.departments[i].selected = true;
@@ -233,7 +232,7 @@ app.get("/employee/:empNum", (req, res) => {
   
 app.get("/employees/delete/:empNum",(req,res)=>{
     dataService.deleteEmployeeByNum(req.params.empNum).then(()=>{
-       redirect("/employees");
+       res.redirect("/employees");
     }).catch((err)=>{
         res.status(400).send("Unable to Remove Employee / Employee not found")
     });
@@ -249,6 +248,25 @@ app.get("/managers",function(req,res)
     })
 })
 
+app.get("/departments/add",(req,res)=>
+{
+    res.render("addDepartment");
+})
+
+
+
+app.post("/departments/add",(req,res)=>
+{
+    dataService.addDepartment(req.body).then(()=>
+    {
+        res.redirect("/departments");
+    }).catch((err)=>
+    {
+        res.status(500).send("Unable to update the department.");
+    })
+})
+
+
 app.get('/departments', function(req,res) 
 {
     dataService.getDepartments().then((dataService) => 
@@ -257,9 +275,9 @@ app.get('/departments', function(req,res)
     }).catch(err => res.render({message: "no results"}));
 });
 
-app.get("/departments/add",(req,res)=>
+app.post("/department/update",(req,res)=>
 {
-    dataService.addDepartment(req.body).then(()=>
+    dataService.updateDepartment(req.body).then(()=>
     {
         res.redirect("/departments");
     }).catch((err)=>

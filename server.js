@@ -5,8 +5,7 @@
 * Name: Samarth Modi Student ID: 133357202 Date: 27-11-2022
 *
 * Your app’s URL (from Cyclic Heroku) that I can click to see your application:
-* 
-*https://github.com/Samarth-Modi/a5.git
+* https://dead-cyan-millipede-tutu.cyclic.app/
 *************************************************************************/ 
 
  //http:localhost:8080

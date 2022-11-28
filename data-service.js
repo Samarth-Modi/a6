@@ -1,12 +1,11 @@
 /*************************************************************************
-* BTI325– Assignment 3
-* for this assignment, I took the help of my Friend kush while assignment.
-other than that I did everything by myself.
+* BTI325– Assignment 5
+* for this assignment, I took the help of my Friend kush while doing the assignment.
 *
-* Name: Samarth Modi Student ID: 133357202 Date: 12-11-2022
+* Name: Samarth Modi Student ID: 133357202 Date: 27-11-2022
 *
 * Your app’s URL (from Cyclic Heroku) that I can click to see your application:
-* https://whispering-depths-02754.herokuapp.com/
+* 
 *
 *************************************************************************/ 
 const fs = require('fs');
@@ -61,7 +60,7 @@ var sequelize = new Sequelize('qhkwwiov', 'qhkwwiov', 'YoyMzqgBD8PnGa0gJgvccPlQw
     isManager: Sequelize.BOOLEAN,
     employeeManagerNum: Sequelize.INTEGER,
     status: Sequelize.STRING,
-    department: Sequelize.STRING,
+    department: Sequelize.INTEGER,
     hireDate: Sequelize.STRING
    });
 
@@ -97,7 +96,7 @@ module.exports.getAllEmployees = function()
     {
        Employee.findAll().then((data)=>
        {
-        resolve(data);
+        res(data);
        }).catch((err)=>
        {
         rej("No results returned.");
@@ -131,7 +130,7 @@ module.exports.getDepartments = function()
     {
         Department.findAll().then((data)=>
         {
-         resolve(data);
+         res(data);
         }).catch((err)=>
         {
          rej("No results returned.");
@@ -212,7 +211,7 @@ module.exports.getEmployeesByManager = function(manager)
     });
 }
 
-module.exports.getEmployeeByNum = function(num)
+module.exports.getEmployeeByNum = function(value)
 {
     return new Promise((res,rej)=>
     {
@@ -283,7 +282,7 @@ module.exports.addDepartment= function(departmentData){
   }
   
 module.exports.updateDepartment=function(departmentData){
-    return new Promise((resolve, reject)=>{
+    return new Promise((res, rej)=>{
         for (let temp in departmentData)
            {
                if (departmentData[temp]=="")
@@ -294,22 +293,22 @@ module.exports.updateDepartment=function(departmentData){
        Department.update(departmentData,
        {where: {departmentId: departmentData.departmentId}})
        .then(()=>{
-           resolve();
+           res();
        }).catch((err)=>{
-           reject("unable to update department");
+           rej("unable to update department");
        });
     });
   }
   
   
 module.exports.getDepartmentById=function(id){
-    return new Promise((resolve, reject)=>{
+    return new Promise((res, rej)=>{
         Department.findAll(
             {where: {departmentId: id}})
             .then((data)=>{
-                resolve(data[0]);
+                res(data[0]);
             }).catch((err)=>{
-                reject("unable to update department");
+                rej("unable to update department");
             });
     });
   }

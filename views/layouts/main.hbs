@@ -1,4 +1,4 @@
-{{!-- /*************************************************************************
+/*************************************************************************
 * BTI325– Assignment 5
 * for this assignment, I took the help of my Friend kush while doing the assignment.
 *
@@ -6,7 +6,7 @@
 *
 * Your app’s URL (from Cyclic Heroku) that I can click to see your application:
 * https://dead-cyan-millipede-tutu.cyclic.app/
-*************************************************************************/  --}}
+*************************************************************************/  
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,6 +38,27 @@
             {{#navLink "/"}}Home{{/navLink}}
             {{#navLink "/about"}}About{{/navLink}}
           </ul>
+          {{#if session.user}} 
+            <form class="navbar-form navbar-right"> 
+            <div class="dropdown"> 
+            <button class="btn btn-primary dropdown-toggle" type="button" id="userMenu" data-toggle="dropdown"> 
+            <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{session.user.userName}}&nbsp;&nbsp;<span class="caret"></span> 
+            </button> 
+            <ul class="dropdown-menu" aria-labelledby="userMenu"> 
+            <li><a href="/userHistory">User History</a></li> 
+          <li><a href="/logout">Log Out</a></li> 
+          </ul> 
+          </div> 
+        </form> 
+        {{else}}
+       <form class="navbar-form navbar-right">
+        <a href="/register" class="btn btn-success"><span class="glyphicon glyphicon-cog">
+        </span>&nbsp;&nbsp;Register</a>
+        <a href="/login" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right">
+        </span>&nbsp;&nbsp;Log In</a>
+        </form>
+        {{/if}}
+
           <ul class="nav navbar-nav navbar-right">
             {{#navLink "/images"}}Images{{/navLink}}
             {{#navLink "/employees"}}Employees{{/navLink}}
@@ -73,4 +94,4 @@
     <!-- Latest compiled and minified Bootstrap 3.3.7 JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </body>
-</html>
+</html> 

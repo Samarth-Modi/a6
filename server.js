@@ -92,7 +92,7 @@ function ensureLogin(req,res,next)
 {
     if(!req.session.user)
     {
-        res.direct("/login");
+        res.redirect("/login");
     }else
     {
         next();
@@ -314,14 +314,7 @@ app.get("/employees/delete/:empNum",ensureLogin,(req,res)=>{
 });
     
 
-app.get("/managers",function(req,res)
-{
-    dataService.getManagers().then((dataService) => 
-    {
-        res.render("departments",dataService.length>0?{departments:dataService}:{message:"No results."})
 
-    })
-})
 
 app.get("/departments/add",ensureLogin,(req,res)=>
 {

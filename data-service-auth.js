@@ -1,3 +1,12 @@
+/*************************************************************************
+* BTI325– Assignment 6
+* for this assignment, I took the help of my Friend kush while doing the assignment.
+*
+* Name: Samarth Modi Student ID: 133357202 Date: 11-12-2022
+*
+* Your app’s URL (from Cyclic Heroku) that I can click to see your application:
+* https://slate-gray-gosling-sari.cyclic.app/
+*************************************************************************/ 
 const db = 'mongodb+srv://dbUser:sdmodi@senecaweb.yduebyi.mongodb.net/?retryWrites=true&w=majority';
 
 var mongoose = require("mongoose");
